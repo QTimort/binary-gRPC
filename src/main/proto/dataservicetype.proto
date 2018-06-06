@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "commontype.proto";
+
+option java_multiple_files = true;
+option java_package = "fr.diguiet.grpc.rpc.common";
+option java_outer_classname = "DataServiceTypeProto";
+option objc_class_prefix = "DST";
+
+message BlobCreationInfo {
+    UUID blob_id = 1;
+    google.protobuf.Timestamp expiration_date = 2;
+}
+
+message BlobDownloadInfo {
+    uint32 blob_length = 1;
+    google.protobuf.Timestamp expiration_date = 2;
+}
+
+message BlobChunk {
+    bytes payload = 1;
+    google.protobuf.Timestamp expiration_date = 2;
+}
+
+message ImageLevels {
+    repeated uint64 levels = 1 [packed=true];
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "fr.diguiet.grpc.rpc.common";
+option java_outer_classname = "CommonTypeProto";
+option objc_class_prefix = "CTP";
+
+message UUID {
+    string id = 1; // UUID (16 bytes), we could use bytes instead if human readability doesn't matter
+}
+
+message Error {
+    int32 code = 1;
+    string message = 2;
+}

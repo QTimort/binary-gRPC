@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "commontype.proto";
+import "dataservicetype.proto";
+
+option java_multiple_files = true;
+option java_package = "fr.diguiet.grpc.rpc.common";
+option java_outer_classname = "DataServiceProto";
+option objc_class_prefix = "DSV";
+
+package dataservice;
+
+service BinaryUpload {
+    rpc CreateBlob (CreateBlobRequest) returns (CreateBlobResponse) {}
+    rpc UploadChunk (UploadBlobRequest) returns (UploadBlobResponse) {}
+    rpc DeleteBlob (DeleteBlobRequest) returns (DeleteBlobResponse) {}
+}
+
+service BinaryDownload {
+    rpc GetBlobInfo (GetBlobInfoRequest) returns (GetBlobInfoResponse) {}
+    rpc GetChunk (GetBlobChunkRequest) returns (GetBlobChunkResponse) {}
+    rpc DeleteBlob (DeleteBlobRequest) returns (DeleteBlobResponse) {}
+}
+
+service ImageAnalysis {
+    rpc GetImageLevels (GetImageLevelsRequest) returns (GetImageLevelsResponse) {}
+}
+
+service ImageGenerator {
+    rpc TakeImage (TakeImageRequest) returns (TakeImageResponse) {}
+}
+
+message CreateBlobRequest {
+    uint32 blob_size = 1;
+    uint32 chunk_count = 2;
+}
+
+message CreateBlobResponse {
+    oneof result {
+        BlobCreationInfo info = 1;
+        Error error = 2;
+    }
+}
+message UploadBlobRequest {
+    UUID blob_id = 1;
+    uint32 chunk_index = 2;
+    bytes payload = 3;
+}
+
+message UploadBlobResponse {
+    oneof result {
+        google.protobuf.Timestamp expiration_date = 1;
+        Error error = 2;
+    }
+}
+
+message GetBlobChunkRequest {
+    UUID blob_id = 1;
+    uint32 start_offset = 2;
+    uint32 length = 3;
+}
+
+message GetBlobChunkResponse {
+    oneof result {
+        BlobChunk chunk = 1;
+        Error error = 2;
+    }
+}
+
+message GetBlobInfoRequest {
+    UUID blob_id = 1;
+}
+
+message GetBlobInfoResponse {
+    oneof result {
+        BlobDownloadInfo info = 1;
+        Error error = 2;
+    }
+}
+
+
+message DeleteBlobRequest {
+    UUID blob_id = 1;
+}
+
+message DeleteBlobResponse {
+    Error error = 1; // optional
+}
+
+message GetImageLevelsRequest {
+    UUID blob_id = 1;
+}
+
+message GetImageLevelsResponse {
+    oneof result {
+        ImageLevels levels = 1;
+        Error error = 2;
+    }
+}
+
+message TakeImageRequest {
+
+}
+
+message TakeImageResponse {
+    oneof result {
+        UUID blob_id = 1;
+        Error error = 2;
+    }
+}
